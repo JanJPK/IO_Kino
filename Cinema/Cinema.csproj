@@ -42,11 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Containers\ContainerBase.cs" />
+    <Compile Include="Containers\Movies.cs" />
+    <Compile Include="Containers\Reservations.cs" />
+    <Compile Include="Containers\Shows.cs" />
+    <Compile Include="Items\ICinemaItem.cs" />
+    <Compile Include="Items\Movie.cs" />
+    <Compile Include="Items\PersonalData.cs" />
+    <Compile Include="Items\Reservation.cs" />
+    <Compile Include="Items\Show.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
