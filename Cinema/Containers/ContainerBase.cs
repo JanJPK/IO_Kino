@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Cinema.Items;
 
 namespace Cinema.Containers
@@ -16,7 +17,7 @@ namespace Cinema.Containers
 
         #region Public Properties
 
-        public abstract Dictionary<int, T> Items { get; set; }
+        protected abstract Dictionary<int, T> Items { get; set; }
 
         #endregion
 
@@ -36,7 +37,20 @@ namespace Cinema.Containers
         public virtual T Search(int id)
         {
             //return Items.First(p => p.ID == id);
-            return Items[id];
+            if (Items.ContainsKey(id))
+            {
+                return Items[id];
+            }
+            return default(T);
+        }
+
+        public virtual bool Contains(T model)
+        {
+            if (Items.ContainsValue(model))
+            {
+                return true;
+            }
+            return false;
         }
 
         #endregion

@@ -51,7 +51,7 @@ namespace Cinema.Items
         public override string ToString()
         {
             return "ID: " + ID + Environment.NewLine +
-                   "Movie: " + Show.Movie.Title + Environment.NewLine +
+                   "Film: " + Show.Movie.Title + Environment.NewLine +
                    "Seans: " + Show.ID + Environment.NewLine +
                    "Data: " + Show.Date + Environment.NewLine +
                    "Miejsce: " + Miejsce.Item1 + " rząd, " + Miejsce.Item2 + " miejsce" + Environment.NewLine +

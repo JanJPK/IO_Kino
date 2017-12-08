@@ -219,19 +219,18 @@
 	\newline \textbf{WK: } Podanie filmu o danym identyfikatorze
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-		\item Podanie ID filmu
-		\item Należy wywołać \textit{\textbf{PU FindMovie}}, sprawdzić czy film o podanym ID istnieje. Jeśli istnieje, można zmodyfikować dany film, w przeciwnym wypadku należy zakończyć PU.
+		\item Podanie ID seansu
+		\item Należy wywołać \textit{\textbf{PU FindMovie}}, sprawdzić czy film o podanym ID istnieje. Jeśli istnieje, można zmodyfikować dany film lub wywołać \textit{\textbf{PU DeleteMovie}} w celu usunięcia filmu, w przeciwnym wypadku należy zakończyć PU.
 	\end{enumerate}
 	
 	\subsubsection{PU DeleteMovie}
 	\noindent \textbf{Opis }
 	\newline \textbf{Cel:} Usunięcie filmu z BD
-	\newline \textbf{WS: } Brak
+	\newline \textbf{WS: } Jest wywoływany z \textit{\textbf{PU ModifyMovie}}, jeśli dany film zostanie znaleziony za pomocą \textit{\textbf{PU FindMovie}}
 	\newline \textbf{WK: } Usunięcie filmu o podanych do PU danych
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-		\item Podanie ID filmu
-		\item Należy wywołać \textit{\textbf{PU FindMovie}}, sprawdzić czy film o podanym ID istnieje. Jeśli istnieje, film zostaje usunięty, w przeciwnym wypadku należy zakończyć PU.
+		\item Film o podanych danych zostaje usunięty.
 	\end{enumerate}
 	
 	\subsubsection{PU FindMovie}
@@ -265,19 +264,18 @@
 	\newline \textbf{WK: } Podanie seansu o danym identyfikatorze
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-		\item Podanie ID seansu
-		\item Należy wywołać \textit{\textbf{PU FindShow}}, sprawdzić czy seans o podanym ID istnieje. Jeśli istnieje, można zmodyfikować dany seans, w przeciwnym wypadku należy zakończyć PU.
+		\item Podanie ID filmu
+		\item Należy wywołać \textit{\textbf{PU FindShow}}, sprawdzić czy seans o podanym ID istnieje. Jeśli istnieje, można zmodyfikować dany seans lub wywołać \textit{\textbf{PU DeleteShow}} w celu usunięcia seansu, w przeciwnym wypadku należy zakończyć PU.
 	\end{enumerate}
 	
 	\subsubsection{PU DeleteShow}
 	\noindent \textbf{Opis }
 	\newline \textbf{Cel:} Usunięcie seansu z BD
-	\newline \textbf{WS: } Brak
+	\newline \textbf{WS: } Jest wywoływany z \textit{\textbf{PU ModifyShow}}, jeśli dany seans zostanie znaleziony za pomocą \textit{\textbf{PU FindShow}}
 	\newline \textbf{WK: } Usunięcie seansu o podanych do PU danych
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-		\item Podanie ID seansu.
-		\item Należy wywołać \textit{\textbf{PU FindShow}}, sprawdzić czy seans o podanym ID istnieje. Jeśli istnieje, seans zostaje usunięty, w przeciwnym wypadku należy zakończyć PU.
+		\item Seans o podanych danych zostaje usunięty.
 	\end{enumerate}
 	
 	\subsubsection{PU FindShow}
@@ -288,8 +286,8 @@
 	\newline \textbf{WK: } Podanie seansu o zadanych danych lub komunikat o braku takowego seansu
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-	\item Szukanie przebiega według danych podanych do przypadku użycia (id seansu lub godziny seansu, nazwy filmu w zależności od potrzeby)
-	\item Jeśli istnieje seans o podanych danych, jest on zwracany, w przeciwnym wypadku zwracana jest informacja o jego braku.
+		\item Szukanie przebiega według danych podanych do przypadku użycia (id seansu lub godziny seansu, nazwy filmu w zależności od potrzeby)
+		\item Jeśli istnieje seans o podanych danych, jest on zwracany, w przeciwnym wypadku zwracana jest informacja o jego braku.
 	\end{enumerate}
 	
 	\subsection{Zarządzanie rezerwacjami}
@@ -300,8 +298,8 @@
 	\newline \textbf{WK: } Dodanie rezerwacji o podanych atrybutach: Seans, data, miejsce, dane klienta
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-	\item Należy podać atrybuty rezerwacji.
-	\item Należy wywołać \textit{\textbf{PU FindShow}}, sprawdzić czy seans o podanym ID istnieje. Jeśli istnieje, należy wywołać \textit{\textbf{PU FindReservation}}, sprawdzić czy na dane miejsce nie ma już rezerwacji. Jeśli warunki są spełnione, dodajemy nową rezerwacje, w przeciwnym wypadku należy zakończyć PU.
+		\item Należy podać atrybuty rezerwacji.
+		\item Należy wywołać \textit{\textbf{PU FindShow}}, sprawdzić czy seans o podanym ID istnieje. Jeśli istnieje, należy wywołać \textit{\textbf{PU FindReservation}}, sprawdzić czy na dane miejsce nie ma już rezerwacji. Jeśli warunki są spełnione, dodajemy nową rezerwacje, w przeciwnym wypadku należy zakończyć PU.
 	\end{enumerate}
 	
 	\subsubsection{PU AddGroupReservation}
@@ -311,8 +309,8 @@
 	\newline \textbf{WK: } Dodanie rezerwacji o podanych atrybutach: Seans, data, miejsce, dane klienta
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-	\item Należy podać atrybuty rezerwacji - najpierw seans, data i dane klienta zamawiającego; następnie wybrać odpowiednią ilość miejsc
-	\item Należy wywołać \textit{\textbf{PU FindShow}}, sprawdzić czy seans o podanym ID istnieje. Jeśli istnieje, należy wywołać \textit{\textbf{PU FindReservation}}, sprawdzić czy na dane miejsca nie ma już rezerwacji. Jeśli warunki są spełnione, dodajemy nową rezerwacje, w przeciwnym wypadku należy zakończyć PU.
+		\item Należy podać atrybuty rezerwacji - najpierw seans, data i dane klienta zamawiającego; następnie wybrać odpowiednią ilość miejsc
+		\item Należy wywołać \textit{\textbf{PU FindShow}}, sprawdzić czy seans o podanym ID istnieje. Jeśli istnieje, należy wywołać \textit{\textbf{PU FindReservation}}, sprawdzić czy na dane miejsca nie ma już rezerwacji. Jeśli warunki są spełnione, dodajemy nową rezerwacje, w przeciwnym wypadku należy zakończyć PU.
 	\end{enumerate}
 	
 	\newpage
@@ -323,19 +321,18 @@
 	\newline \textbf{WK: } Podanie rezerwacji o danym identyfikatorze
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-	\item Podanie ID rezerwacji
-	\item Należy wywołać \textit{\textbf{PU FindReservation}}, sprawdzić czy rezerwacja o podanym ID istnieje. Jeśli istnieje, można zmodyfikować daną rezerwacje, w przeciwnym wypadku należy zakończyć PU.
+		\item Podanie ID rezerwacji
+		\item Należy wywołać \textit{\textbf{PU FindReservation}}, sprawdzić czy rezerwacja o podanym ID istnieje. Jeśli istnieje, można zmodyfikować daną rezerwacje lub wywołać \textit{\textbf{PU DeleteReservation}} w celu usunięcia rezerwacji, w przeciwnym wypadku należy zakończyć PU.
 	\end{enumerate}
 	
 	\subsubsection{PU DeleteReservation}
 	\noindent \textbf{Opis}
 	\newline \textbf{Cel:} Usunięcie rezerwacji z BD
-	\newline \textbf{WS: } Brak
+	\newline \textbf{WS: } Jest wywoływany z \textit{\textbf{PU ModifyReservation}}, jeśli dana rezerwacja zostanie znaleziona za pomocą \textit{\textbf{PU FindReservation}}
 	\newline \textbf{WK: } Usunięcie filmu o podanych do PU danych
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-	\item Podanie ID rezerwacji
-	\item Należy wywołać \textit{\textbf{PU FindReservation}}, sprawdzić czy rezerwacja o podanym ID istnieje. Jeśli istnieje, rezerwacja zostaje usunięta, w przeciwnym wypadku należy zakończyć PU.
+		\item Rezerwacja o podanych danych zostaje usunięta.
 	\end{enumerate}
 	
 	\subsubsection{PU FindReservation}
@@ -346,8 +343,8 @@
 	\newline \textbf{WK: } Podanie rezerwacji o zadanych danych lub komunikat o braku takowej rezerwacji
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-	\item Szukanie przebiega według danych podanych do przypadku użycia (nr. rezerwacji lub imienia i nazwiska osoby rezerwującej)
-	\item Jeśli istnieje rezerwacja o podanych danych, zwracana jest rezerwacja, w przeciwnym wypadku zwracana jest informacja o jej braku.
+		\item Szukanie przebiega według danych podanych do przypadku użycia (nr. rezerwacji lub imienia i nazwiska osoby rezerwującej)
+		\item Jeśli istnieje rezerwacja o podanych danych, zwracana jest rezerwacja, w przeciwnym wypadku zwracana jest informacja o jej braku.
 	\end{enumerate}
 	
 	\newpage
@@ -359,10 +356,10 @@
 	\newline \textbf{WK: } Dodanie nowego biletu wraz z wymaganymi danymi: imię oraz nazwisko kupującego, id seansu, nr. miejsca.
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-	\item Należy podać dane potrzebne do zakupu biletu: imię i nazwisko kupującego oraz jeśli potrzeba numer miejsca, id seansu, nr. rezerwacji
-	\item Jeśli dokonano wcześniejszej rezerwacji to 3., w przeciwnym wypadku wywołujemy \textit{\textbf{PU AddReservation}}
-	\item Należy wywołać \textit{\textbf{PU FindReservation}} w celu jej identyfikacji
-	\item Jeśli się ona powiedzie wywołujemy \textit{\textbf{PU PrintTicket}}, w przeciwnym wypadku należy zakończyć PU.
+		\item Należy podać dane potrzebne do zakupu biletu: imię i nazwisko kupującego oraz jeśli potrzeba numer miejsca, id seansu, nr. rezerwacji
+		\item Jeśli dokonano wcześniejszej rezerwacji to 3., w przeciwnym wypadku wywołujemy \textit{\textbf{PU AddReservation}}
+		\item Należy wywołać \textit{\textbf{PU FindReservation}} w celu jej identyfikacji
+		\item Jeśli się ona powiedzie wywołujemy \textit{\textbf{PU PrintTicket}}, w przeciwnym wypadku należy zakończyć PU.
 	\end{enumerate}
 	
 	\subsubsection{PU PrintTicket}
@@ -373,8 +370,8 @@
 	\newline \textbf{WK: } Wygenerowanie biletu
 	\newline \textbf{Przebieg: }
 	\begin{enumerate}
-	\item Generacja biletu.
-	%\item Eksport biletu do druku
+		\item Generacja biletu.
+		%\item Eksport biletu do druku
 	\end{enumerate}
 	
 	%----------------------------------------------------------------------------------------

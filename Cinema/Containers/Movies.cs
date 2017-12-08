@@ -9,7 +9,7 @@ namespace Cinema.Containers
     {
         #region Public Properties
 
-        public override Dictionary<int, Movie> Items { get; set; }
+        protected override Dictionary<int, Movie> Items { get; set; }
 
         #endregion
 
@@ -29,6 +29,12 @@ namespace Cinema.Containers
             //return Items.First(p => p.Title == title);
             return Items.FirstOrDefault(x => x.Value.Title == title).Value;
         }
+
+        public override string Print(Movie movie)
+        {
+            return movie.ToString();
+        }
+
 
         #endregion
     }

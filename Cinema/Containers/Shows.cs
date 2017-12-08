@@ -9,13 +9,19 @@ namespace Cinema.Containers
 {
     public class Shows : ContainerBase<Show>
     {
-        public override Dictionary<int, Show> Items { get; set; }
+        protected override Dictionary<int, Show> Items { get; set; }
 
-        public void Add(string title, DateTime date, int length, float ticketPrice, Movie movie)
+        public Show Add(string title, DateTime date, int length, float ticketPrice, Movie movie)
         {
             int id = Items.Keys.Max();
             id++;
-            Items.Add(id, new Show(id, date, length, ticketPrice, movie));
+            var show = new Show(id, date, length, ticketPrice, movie);
+            if (!Items.ContainsValue(show))
+            {
+                Items.Add(id, show);
+                return show;
+            }
+            return null;
         }
 
         public Show Search(DateTime date)

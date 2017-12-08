@@ -9,6 +9,6 @@ namespace Cinema.Containers
 {
     class Reservations : ContainerBase<Reservation>
     {
-        public override Dictionary<int, Reservation> Items { get; set; }
+        protected override Dictionary<int, Reservation> Items { get; set; }
     }
 }
