@@ -1,20 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Cinema.Items;
 
 namespace Cinema.Containers
 {
     public class Shows : ContainerBase<Show>
     {
-        protected override Dictionary<int, Show> Items { get; set; }
+        #region Constructors and Destructors
 
-        public Show Add(string title, DateTime date, int length, float ticketPrice, Movie movie)
+        public Shows()
         {
-            int id = Items.Keys.Max();
+            Items = new Dictionary<int, Show>();
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public Show Add(DateTime date, int length, decimal ticketPrice, Movie movie)
+        {
+            int id = Items.Count == 0 ? 0 : Items.Keys.Max();
             id++;
+
             var show = new Show(id, date, length, ticketPrice, movie);
             if (!Items.ContainsValue(show))
             {
@@ -28,5 +36,30 @@ namespace Cinema.Containers
         {
             return Items.FirstOrDefault(x => x.Value.Date == date).Value;
         }
+
+        public List<Show> Search(string title)
+        {
+            List<Show> shows = new List<Show>();
+            foreach (var item in Items)
+            {
+                if (item.Value.Movie.Title == title)
+                {
+                    shows.Add(item.Value);
+                }
+            }
+            return shows;
+        }
+
+        public void Remove(string title)
+        {
+            foreach (var item in Items)
+            {
+                if (item.Value.Movie.Title == title)
+                {
+                    Items.Remove(item.Key);
+                }
+            }
+        }
+        #endregion
     }
 }

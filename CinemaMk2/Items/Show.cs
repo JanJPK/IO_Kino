@@ -1,14 +1,15 @@
 ﻿using System;
-using Cinema.Containers;
+using System.Collections.Generic;
+using CinemaMk2.Containers;
 
-namespace Cinema.Items
+namespace CinemaMk2.Items
 {
     public class Show : ICinemaItem
     {
         public Reservations Reservations { get; set; }
         #region Constructors and Destructors
 
-        public Show(int id, DateTime date, int length, decimal ticketPrice, Movie movie)
+        public Show(int id, DateTime date, int length, float ticketPrice, Movie movie)
         {
             ID = id;
             Date = date;
@@ -16,7 +17,6 @@ namespace Cinema.Items
             TicketPrice = ticketPrice;
             Movie = movie;
             Reservations = new Reservations();
-            Seats = new bool[10,8];
         }
 
         #endregion
@@ -28,7 +28,7 @@ namespace Cinema.Items
         public int Length { get; set; }
         public Movie Movie { get; set; }
         public bool[,] Seats { get; set; }
-        public decimal TicketPrice { get; set; }
+        public float TicketPrice { get; set; }
 
         #endregion
 

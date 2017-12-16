@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace Cinema.Items
+namespace CinemaMk2.Items
 {
     public class Reservation : ICinemaItem
     {

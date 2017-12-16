@@ -7,21 +7,31 @@ namespace Cinema.Containers
 {
     public class Movies : ContainerBase<Movie>
     {
-        #region Public Properties
+        #region Constructors and Destructors
 
-        protected override Dictionary<int, Movie> Items { get; set; }
+        public Movies()
+        {
+            Items = new Dictionary<int, Movie>();
+        }
 
         #endregion
 
         #region Public Methods and Operators
 
-        public void Add(string title, DateTime releaseDate, int length, string director, int viewerAge,
+        public Movie Add(string title, DateTime releaseDate, int length, string director, int viewerAge,
             string language)
         {
             //int id = Items.OrderBy(p => p.ID).Last().ID;
-            int id = Items.Keys.Max();
+            int id = Items.Count == 0 ? 0 : Items.Keys.Max();
             id++;
-            Items.Add(id, new Movie(id, title, releaseDate, length, director, viewerAge, language));
+
+            Movie movie = new Movie(id, title, releaseDate, length, director, viewerAge, language);
+            if (!Items.ContainsValue(movie))
+            {
+                Items.Add(id, movie);
+                return movie;
+            }
+            return null;
         }
 
         public Movie Search(string title)
@@ -29,12 +39,6 @@ namespace Cinema.Containers
             //return Items.First(p => p.Title == title);
             return Items.FirstOrDefault(x => x.Value.Title == title).Value;
         }
-
-        public override string Print(Movie movie)
-        {
-            return movie.ToString();
-        }
-
 
         #endregion
     }

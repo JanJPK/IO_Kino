@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace Cinema.Items
+namespace CinemaMk2.Items
 {
     public class Movie : ICinemaItem
     {
@@ -49,7 +50,7 @@ namespace Cinema.Items
         {
             return "ID: " + ID + Environment.NewLine +
                    "Tytuł: " + Title + Environment.NewLine +
-                   "Premiera: " + ReleaseDate.ToString("yyyy-MM-dd") + Environment.NewLine +
+                   "Premiera: " + ReleaseDate + Environment.NewLine +
                    "Długość: " + Length + " minut" + Environment.NewLine +
                    "Reżyser: " + Director + Environment.NewLine +
                    "Sugerowany wiek: " + ViewerAge + Environment.NewLine +

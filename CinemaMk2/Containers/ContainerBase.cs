@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
-using Cinema.Items;
+using CinemaMk2.Items;
 
-namespace Cinema.Containers
+namespace CinemaMk2.Containers
 {
     public abstract class ContainerBase<T> where T : ICinemaItem
     {
         #region Constructors and Destructors
+
+        protected ContainerBase()
+        {
+        }
 
         #endregion
 
@@ -17,16 +21,7 @@ namespace Cinema.Containers
 
         #region Public Methods and Operators
 
-        public virtual bool Contains(T model)
-        {
-            if (Items.ContainsValue(model))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public virtual bool Remove(int id)
+        public bool Remove(int id)
         {
             ICinemaItem item = Search(id);
             if (item != null)
@@ -47,9 +42,9 @@ namespace Cinema.Containers
             return default(T);
         }
 
-        public bool Any()
+        public virtual bool Contains(T model)
         {
-            if (Items.Count > 0)
+            if (Items.ContainsValue(model))
             {
                 return true;
             }
