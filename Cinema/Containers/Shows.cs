@@ -54,13 +54,14 @@ namespace Cinema.Containers
 
         public void Remove(string title)
         {
-            foreach (var item in Items)
+            for (int i = Items.Count; i > 0; i--)
             {
-                if (item.Value.Movie.Title == title)
+                if (Items[i].Movie.Title == title)
                 {
-                    Items.Remove(item.Key);
+                    Items.Remove(i);
                 }
             }
+
         }
 
         public Show Search(DateTime date)
