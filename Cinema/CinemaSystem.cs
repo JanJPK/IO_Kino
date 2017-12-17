@@ -130,11 +130,21 @@ namespace Cinema
                 Console.WriteLine("Nr telefonu: ");
                 string phone = Console.ReadLine();
 
-                Console.WriteLine(show.ShowSeats());
-                Console.WriteLine("Wybierz rząd: ");
-                int row = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Wybierz miejsce: ");
-                int column = Convert.ToInt32(Console.ReadLine());
+                int row = 0;
+                int column = 0;
+                while (true)
+                {
+                    Console.WriteLine(show.ShowSeats());
+                    Console.WriteLine("Wybierz rząd: ");
+                    row = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("Wybierz miejsce: ");
+                    column = Convert.ToInt32(Console.ReadLine());
+
+                    if (!show.Seats[row, column])
+                        break;
+                    Console.Write("Miejsce jest zajęte. Wybierz inne.");
+                }
+
 
                 var reservation = show.AddReservation(new PersonalData(firstName, secondName, phone),
                     new Tuple<int, int>(row - 1, column - 1));
