@@ -24,7 +24,7 @@ namespace Cinema.Items
         #endregion
 
         #region Public Methods and Operators
-        
+
         public override string ToString()
         {
             return "Imię: " + FirstName + Environment.NewLine + "Nazwisko: " + SecondName + Environment.NewLine +

@@ -5,10 +5,6 @@ namespace Cinema.Containers
 {
     public abstract class ContainerBase<T> where T : ICinemaItem
     {
-        #region Constructors and Destructors
-
-        #endregion
-
         #region Public Properties
 
         public Dictionary<int, T> Items { get; set; }
@@ -16,6 +12,15 @@ namespace Cinema.Containers
         #endregion
 
         #region Public Methods and Operators
+
+        public bool Any()
+        {
+            if (Items.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
         public virtual bool Contains(T model)
         {
@@ -45,15 +50,6 @@ namespace Cinema.Containers
                 return Items[id];
             }
             return default(T);
-        }
-
-        public bool Any()
-        {
-            if (Items.Count > 0)
-            {
-                return true;
-            }
-            return false;
         }
 
         #endregion

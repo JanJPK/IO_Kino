@@ -6,6 +6,10 @@
 
         int ID { get; set; }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         string ToString();
 
         #endregion

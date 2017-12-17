@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using Cinema.Containers;
 using Cinema.Items;
 
@@ -11,6 +10,17 @@ namespace Cinema
 
         private readonly Movies movies;
         private readonly Shows shows;
+
+        // Inwentarz sklepu z filmami.
+        private Movie[] movieStoreInventory =
+        {
+            new Movie(0, "Kwaśny robaczek", Convert.ToDateTime("2009-05-26"),
+                125, "M. Shamalayamanam", 19, "Polski"),
+            new Movie(0, "Kwaśny robaczek 2: Zemsta", Convert.ToDateTime("2013-09-21"),
+                145, "M. Shamalayamanam", 19, "Polski"),
+            new Movie(0, "Kwaśny robaczek 3: Powrót robaczka", Convert.ToDateTime("2017-11-15"),
+                186, "K. Shakashsahamasan", 19, "Polski")
+        };
 
         #endregion
 
@@ -107,11 +117,33 @@ namespace Cinema
 
         private void AddReservation()
         {
+            var show = FindShow();
+            if (show != null)
+            {
+                //(PersonalData personalData, Show show, Tuple<int, int> seat)
+                Console.WriteLine(Environment.NewLine);
+                Console.WriteLine("Podaj dane osobowe rezerwującego: ");
+                Console.WriteLine("Imię: ");
+                string firstName = Console.ReadLine();
+                Console.WriteLine("Nazwisko: ");
+                string secondName = Console.ReadLine();
+                Console.WriteLine("Nr telefonu: ");
+                string phone = Console.ReadLine();
+
+                Console.WriteLine(show.ShowSeats());
+                Console.WriteLine("Wybierz rząd: ");
+                int row = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Wybierz miejsce: ");
+                int column = Convert.ToInt32(Console.ReadLine());
+
+                var reservation = show.AddReservation(new PersonalData(firstName, secondName, phone),
+                    new Tuple<int, int>(row - 1, column - 1));
+                Console.WriteLine(reservation != null ? "Dodawanie powiodło się." : "Dodawanie nie powiodło sie.");
+            }
         }
 
         private void AddShow()
         {
-            // TODO: Wypisywanie obecnie zaplanowanych seansów na dany dzień - sala wtedy jest zajęta.
             Console.WriteLine("Podaj datę seansu [yyyy-MM-dd HH:mm]:");
             DateTime date = Convert.ToDateTime(Console.ReadLine());
             Console.WriteLine("Podaj długość seansu: ");
@@ -205,13 +237,14 @@ namespace Cinema
                         {
                             for (int i = 0; i < foundReservations.Count; i++)
                             {
-                                Console.WriteLine(i + "- ID: " + foundReservations[i].ID + "; film: " +
+                                Console.WriteLine((i + 1) + "- ID: " + foundReservations[i].ID + "; film: " +
                                                   foundReservations[i].Show.Movie.Title + "; data: " +
                                                   foundReservations[i].Show.Date);
                             }
                             Console.WriteLine("Wybierz rezerwacje: ");
-                            var reservationID = Console.ReadKey();
-                            return foundReservations[reservationID.KeyChar];
+                            var reservationID = (int) char.GetNumericValue(Console.ReadKey().KeyChar);
+                            Console.WriteLine(Environment.NewLine);
+                            return foundReservations[reservationID - 1];
                         }
                         break;
                     }
@@ -259,11 +292,12 @@ namespace Cinema
                         {
                             for (int i = 0; i < foundShows.Count; i++)
                             {
-                                Console.WriteLine(i + "- ID: " + foundShows[i].ID + "; data: " + foundShows[i].Date);
+                                Console.WriteLine(i + " - ID: " + foundShows[i].ID + "; data: " + foundShows[i].Date);
                             }
                             Console.WriteLine("Wybierz seans: ");
-                            var showID = Console.ReadKey();
-                            return foundShows[showID.KeyChar];
+                            var showID = (int) char.GetNumericValue(Console.ReadKey().KeyChar);
+                            Console.WriteLine(Environment.NewLine);
+                            return foundShows[showID];
                         }
                         break;
                     }
@@ -320,6 +354,7 @@ namespace Cinema
 
                     case '3':
                     {
+                        ModifyMovie();
                         break;
                     }
 
@@ -328,7 +363,7 @@ namespace Cinema
                         foreach (var movie in movies.Items)
                         {
                             Console.WriteLine(Environment.NewLine);
-                            Console.Write(movie);
+                            Console.Write(movie.Value);
                         }
                         break;
                     }
@@ -348,7 +383,7 @@ namespace Cinema
             while (!stop)
             {
                 Console.WriteLine(Environment.NewLine);
-                Console.WriteLine("Menu biletów");
+                Console.WriteLine("Menu rezerwacji");
                 Console.WriteLine("1 - Dodaj rezerwacje");
                 Console.WriteLine("2 - Usuń rezerwacje");
                 Console.WriteLine("3 - Modyfikuj rezerwacje");
@@ -365,16 +400,19 @@ namespace Cinema
 
                     case '1':
                     {
+                        AddReservation();
                         break;
                     }
 
                     case '2':
                     {
+                        RemoveReservation();
                         break;
                     }
 
                     case '3':
                     {
+                        ModifyReservation();
                         break;
                     }
 
@@ -399,6 +437,7 @@ namespace Cinema
                 Console.WriteLine("3 - Modyfikuj seans");
                 Console.WriteLine("4 - Lista seansów");
                 Console.WriteLine("5 - Powrót");
+                Console.WriteLine("6 - Podgląd miejsc");
                 var key = Console.ReadKey();
                 Console.WriteLine(Environment.NewLine);
                 switch (key.KeyChar)
@@ -411,27 +450,42 @@ namespace Cinema
 
                     case '1':
                     {
+                        AddShow();
                         break;
                     }
 
                     case '2':
                     {
+                        RemoveShow();
                         break;
                     }
 
                     case '3':
                     {
+                        ModifyShow();
                         break;
                     }
 
                     case '4':
                     {
+                        foreach (var show in shows.Items)
+                        {
+                            Console.WriteLine(Environment.NewLine);
+                            Console.Write(show.Value);
+                        }
                         break;
                     }
 
                     case '5':
                     {
                         stop = true;
+                        break;
+                    }
+
+                    case '6':
+                    {
+                        var show = FindShow();
+                        Console.Write(show != null ? show.ShowSeats() : "Błąd.");
                         break;
                     }
                 }
@@ -472,6 +526,44 @@ namespace Cinema
             }
         }
 
+        private void ModifyMovie()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ModifyReservation()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ModifyShow()
+        {
+        }
+
+        private void PopulateContainers()
+        {
+            movies.Add("Noc żywych prowadzących", Convert.ToDateTime("1996-12-12"), 125, "Roman R.", 17,
+                "Matematyczny");
+            movies.Add("Dogłębna analiza", Convert.ToDateTime("2012-11-26"), 125, "Pedro", 19, "Polski");
+
+            shows.Add(Convert.ToDateTime("2017-12-12 12:00"), 120, 15, movies.Items[1]);
+            shows.Add(Convert.ToDateTime("2017-12-12 17:00"), 120, 15, movies.Items[1]);
+            shows.Add(Convert.ToDateTime("2017-12-12 8:00"), 120, 15, movies.Items[2]);
+
+            shows.Items[1].AddReservation(new PersonalData("Bogdan", "Bobek", "123456789"),
+                new Tuple<int, int>(5, 6));
+            shows.Items[1].AddReservation(new PersonalData("Zenon", "Ziemniak", "321654987"),
+                new Tuple<int, int>(5, 7));
+            shows.Items[1].AddReservation(new PersonalData("Klaudiusz", "Kalafior", "321632387"),
+                new Tuple<int, int>(3, 4));
+            shows.Items[1].AddReservation(new PersonalData("Piotr", "Pyra", "321365987"),
+                new Tuple<int, int>(3, 5));
+            shows.Items[1].AddReservation(new PersonalData("Bartek", "Brokół", "854654987"),
+                new Tuple<int, int>(3, 6));
+            shows.Items[2].AddReservation(new PersonalData("Bogdan", "Bobek", "123456789"),
+                new Tuple<int, int>(7, 6));
+        }
+
         private void PrintTicket(Reservations reservation)
         {
             Console.WriteLine("Wydrukowany bilet:");
@@ -487,6 +579,7 @@ namespace Cinema
                 Console.Write(movie);
                 Console.WriteLine("Czy chcesz usunąć ten film? T/N");
                 var key = Console.ReadKey();
+                Console.WriteLine(Environment.NewLine);
                 switch (key.KeyChar)
                 {
                     default:
@@ -525,6 +618,7 @@ namespace Cinema
                     Console.Write(reservation);
                     Console.WriteLine("Czy chcesz usunąć tą rezerwacje? T/N");
                     var key = Console.ReadKey();
+                    Console.WriteLine(Environment.NewLine);
                     switch (key.KeyChar)
                     {
                         default:
@@ -559,6 +653,7 @@ namespace Cinema
                 Console.Write(show);
                 Console.WriteLine("Czy chcesz usunąć ten seans? T/N");
                 var key = Console.ReadKey();
+                Console.WriteLine(Environment.NewLine);
                 switch (key.KeyChar)
                 {
                     default:
@@ -588,11 +683,5 @@ namespace Cinema
         }
 
         #endregion
-
-        private void PopulateContainers()
-        {
-            movies.Add("Noc żywych prowadzących", Convert.ToDateTime("1996-12-12"), 125, "Roman R.", 17, "Matematyczny");
-            movies.Add("Dogłębna analiza", Convert.ToDateTime("2012-11-26"), 125, "Pedro", 19, "Polski");
-        }
     }
 }

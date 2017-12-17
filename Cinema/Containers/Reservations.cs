@@ -18,19 +18,20 @@ namespace Cinema.Containers
 
         #region Public Methods and Operators
 
-        public Reservation Add(int showId, PersonalData personalData, Show show, Tuple<int, int> miejsce)
+        public Reservation Add(PersonalData personalData, Show show, Tuple<int, int> seat)
         {
             // ID rezerwacji = SRRR
             //      S - ID seansu
             //      RRR - ID rezerwacji
             int id = Items.Count == 0 ? 1 : Items.Keys.Max();
             id++;
-            id += showId * 100;
+            id += show.ID * 100;
 
-            var reservation = new Reservation(id, personalData, show, miejsce);
-            if (!Items.ContainsValue(reservation))
+            var reservation = new Reservation(id, personalData, show, seat);
+            if (!Items.ContainsValue(reservation) && show.Seats[seat.Item1, seat.Item2] == false)
             {
                 Items.Add(id, reservation);
+                show.Seats[seat.Item1, seat.Item2] = true;
                 return reservation;
             }
             return null;

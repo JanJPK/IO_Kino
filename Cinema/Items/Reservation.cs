@@ -19,8 +19,8 @@ namespace Cinema.Items
         #region Public Properties
 
         public int ID { get; set; }
-        public Tuple<int, int> Seat { get; set; }
         public PersonalData PersonalData { get; set; }
+        public Tuple<int, int> Seat { get; set; }
         public Show Show { get; set; }
 
         #endregion

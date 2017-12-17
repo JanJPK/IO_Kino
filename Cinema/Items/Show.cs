@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Text;
 using Cinema.Containers;
 
 namespace Cinema.Items
 {
     public class Show : ICinemaItem
     {
-        public Reservations Reservations { get; set; }
         #region Constructors and Destructors
 
         public Show(int id, DateTime date, int length, decimal ticketPrice, Movie movie)
@@ -16,7 +16,7 @@ namespace Cinema.Items
             TicketPrice = ticketPrice;
             Movie = movie;
             Reservations = new Reservations();
-            Seats = new bool[10,8];
+            Seats = new bool[8, 8];
         }
 
         #endregion
@@ -27,6 +27,7 @@ namespace Cinema.Items
         public int ID { get; set; }
         public int Length { get; set; }
         public Movie Movie { get; set; }
+        public Reservations Reservations { get; set; }
         public bool[,] Seats { get; set; }
         public decimal TicketPrice { get; set; }
 
@@ -34,14 +35,60 @@ namespace Cinema.Items
 
         #region Public Methods and Operators
 
+        public Reservation AddReservation(PersonalData personalData, Tuple<int, int> seat)
+        {
+            return Reservations.Add(personalData, this, seat);
+        }
+
+        public string ShowSeats()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("       --[EKRAN]--" + Environment.NewLine);
+            sb.Append(" ");
+            for (int i = 0; i < Seats.GetLength(1); i++)
+            {
+                sb.Append(" " + (i + 1) + " ");
+            }
+            sb.Append(Environment.NewLine);
+            for (int i = 0; i < Seats.GetLength(0); i++)
+            {
+                sb.Append(i + 1);
+                for (int j = 0; j < Seats.GetLength(1); j++)
+                {
+                    sb.Append(Seats[i, j] ? "[R]" : "[_]");
+                }
+                sb.Append(Environment.NewLine);
+            }
+
+            return sb.ToString();
+        }
+
         public override string ToString()
         {
             return "ID: " + ID + Environment.NewLine +
                    "Film: " + Movie.Title + Environment.NewLine +
                    "Długość: " + Length + Environment.NewLine +
-                   "Data: " + Date + Environment.NewLine +
+                   "Data: " + Date.ToString("yyyy-MM-dd HH:mm") + Environment.NewLine +
                    "Cena biletu: " + TicketPrice + Environment.NewLine +
-                   "Ilość miejsc: " + Seats.Length + Environment.NewLine;
+                   "Ilość rezerwacji: " + CountOccupiedSeats() + "/" + Seats.Length + Environment.NewLine;
+        }
+
+        #endregion
+
+        #region Methods
+
+        private int CountOccupiedSeats()
+        {
+            int occupiedSeats = 0;
+            for (int i = 0; i < Seats.GetLength(0); i++)
+            {
+                for (int j = 0; j < Seats.GetLength(1); j++)
+                {
+                    if (Seats[i, j])
+                        occupiedSeats++;
+                }
+            }
+            return occupiedSeats;
         }
 
         #endregion
