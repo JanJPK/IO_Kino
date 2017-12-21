@@ -5,6 +5,9 @@ using Cinema.Items;
 
 namespace Cinema.Containers
 {
+    /// <summary>
+    ///     Kontener rezerwacji.
+    /// </summary>
     public class Reservations : ContainerBase<Reservation>
     {
         #region Constructors and Destructors
@@ -18,8 +21,19 @@ namespace Cinema.Containers
 
         #region Public Methods and Operators
 
+        /// <summary>
+        ///     Dodaje nową rezerwacje. ID jest generowane automatycznie.
+        /// </summary>
+        /// <param name="personalData">Dane klienta.</param>
+        /// <param name="show">Seans.</param>
+        /// <param name="seat">Miejsce w sali.</param>
+        /// <returns>Utworzoną rezerwację lub null jeżeli się nie udało.</returns>
         public Reservation Add(PersonalData personalData, Show show, Tuple<int, int> seat)
         {
+            // Sprawdzenie czy miejsce jest wolne.
+            //if (show.Seats[seat.Item1, seat.Item2]) return null;
+            if (!IsSeatAvailable(show, seat)) return null;
+
             // ID rezerwacji = SRRR
             //      S - ID seansu
             //      RRR - ID rezerwacji
@@ -28,15 +42,19 @@ namespace Cinema.Containers
             id += show.ID * 100;
 
             var reservation = new Reservation(id, personalData, show, seat);
-            if (!Items.ContainsValue(reservation) && show.Seats[seat.Item1, seat.Item2] == false)
-            {
-                Items.Add(id, reservation);
-                show.Seats[seat.Item1, seat.Item2] = true;
-                return reservation;
-            }
-            return null;
+
+            if (Items.ContainsValue(reservation)) return null;
+
+            Items.Add(id, reservation);
+            show.Seats[seat.Item1, seat.Item2] = true;
+            return reservation;
         }
 
+        /// <summary>
+        ///     Usuwanie rezerwacji o zadanym ID.
+        /// </summary>
+        /// <param name="id">ID rezerwacji.</param>
+        /// <returns>Prawda gdy rezerwacja została pomyślnie usunięta.</returns>
         public override bool Remove(int id)
         {
             Reservation reservation = Search(id);
@@ -51,6 +69,11 @@ namespace Cinema.Containers
             return false;
         }
 
+        /// <summary>
+        ///     Znajduje rezerwację na dany numer telefonu.
+        /// </summary>
+        /// <param name="phone">Numer telefonu.</param>
+        /// <returns>Lista znalezionych rezerwacji lub null gdy ich nie ma.</returns>
         public List<Reservation> Search(string phone)
         {
             List<Reservation> reservations = new List<Reservation>();
@@ -62,6 +85,21 @@ namespace Cinema.Containers
                 }
             }
             return reservations;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Sprawdza czy miejsce jest dostępne.
+        /// </summary>
+        /// <param name="show">Seans.</param>
+        /// <param name="seat">Miejsce.</param>
+        /// <returns>Prawda gdy miejsce jest wolne.</returns>
+        private bool IsSeatAvailable(Show show, Tuple<int, int> seat)
+        {
+            return !show.Seats[seat.Item1, seat.Item2];
         }
 
         #endregion

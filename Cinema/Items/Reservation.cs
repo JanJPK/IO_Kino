@@ -2,6 +2,9 @@
 
 namespace Cinema.Items
 {
+    /// <summary>
+    ///     Rezerwacja; zawiera dane klienta (PersonalData).
+    /// </summary>
     public class Reservation : ICinemaItem
     {
         #region Constructors and Destructors

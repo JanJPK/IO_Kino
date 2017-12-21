@@ -5,6 +5,9 @@ using Cinema.Items;
 
 namespace Cinema.Containers
 {
+    /// <summary>
+    ///     Kontener seansów.
+    /// </summary>
     public class Shows : ContainerBase<Show>
     {
         #region Constructors and Destructors
@@ -18,20 +21,33 @@ namespace Cinema.Containers
 
         #region Public Methods and Operators
 
+        /// <summary>
+        ///     Dodaje nowy seans. ID jest generowane automatycznie.
+        /// </summary>
+        /// <param name="date">Data.</param>
+        /// <param name="length">Długość w minutach.</param>
+        /// <param name="ticketPrice">Cena biletu.</param>
+        /// <param name="movie">Film.</param>
+        /// <returns>Utworzony seans lub null jeżeli się nie udało.</returns>
         public Show Add(DateTime date, int length, decimal ticketPrice, Movie movie)
         {
             int id = Items.Count == 0 ? 0 : Items.Keys.Max();
             id++;
 
             var show = new Show(id, date, length, ticketPrice, movie);
-            if (!Items.ContainsValue(show))
-            {
-                Items.Add(id, show);
-                return show;
-            }
-            return null;
+
+            if (Items.ContainsValue(show)) return null;
+
+            Items.Add(id, show);
+            return show;
         }
 
+        /// <summary>
+        ///     ! NIESKOŃCZONE ! NIETESTOWANE !
+        ///     Zwraca przedziały czasu w których są seanse - można zobaczyć kiedy sala jest zajęta.
+        /// </summary>
+        /// <param name="date">Zadany dzień.</param>
+        /// <returns>Lista czasów.</returns>
         public List<string> PlannedShows(DateTime date)
         {
             var query = from item in Items
@@ -52,23 +68,42 @@ namespace Cinema.Containers
             return null;
         }
 
+        /// <summary>
+        ///     Usuwa wszystkie seanse dla zadanego filmu.
+        /// </summary>
+        /// <param name="title">Tytuł filmu.</param>
         public void Remove(string title)
         {
-            for (int i = Items.Count; i > 0; i--)
+            List<int> keysToRemove = new List<int>();
+
+            foreach (var item in Items)
             {
-                if (Items[i].Movie.Title == title)
-                {
-                    Items.Remove(i);
-                }
+                if (item.Value.Movie.Title == title)
+                    keysToRemove.Add(item.Key);
+            }
+
+            foreach (var key in keysToRemove)
+            {
+                Items.Remove(key);
             }
 
         }
 
+        /// <summary>
+        ///     Znajduje seans o danej godzinie.
+        /// </summary>
+        /// <param name="date">Data/godzina seansu.</param>
+        /// <returns>Seans lub null gdy nie ma takiego.</returns>
         public Show Search(DateTime date)
         {
             return Items.FirstOrDefault(x => x.Value.Date == date).Value;
         }
 
+        /// <summary>
+        ///     Znajduje seanse danego filmu.
+        /// </summary>
+        /// <param name="title">Tytuł filmu.</param>
+        /// <returns>Lista znalezionych seansów.</returns>
         public List<Show> Search(string title)
         {
             List<Show> shows = new List<Show>();

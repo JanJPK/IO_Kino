@@ -2,6 +2,9 @@
 
 namespace Cinema.Items
 {
+    /// <summary>
+    ///     Film.
+    /// </summary>
     public class Movie : ICinemaItem
     {
         #region Constructors and Destructors

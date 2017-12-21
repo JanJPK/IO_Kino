@@ -538,7 +538,50 @@ namespace Cinema
 
         private void ModifyMovie()
         {
-            throw new NotImplementedException();
+            var movie = FindMovie();
+            if (movie != null)
+            {
+                Console.WriteLine(movie);
+                Console.WriteLine("Wprowadź nowe dane jeżeli chcesz je zmienić. Kliknij enter by pominąć." + Environment.NewLine);
+
+                Console.WriteLine("Podaj reżysera (" + movie.Director + "): ");
+                string director = Console.ReadLine();
+                Console.Write(Environment.NewLine);
+                if (director != "")
+                     movie.Director = director;
+
+                Console.WriteLine("Podaj język (" + movie.Language +"): ");
+                string language = Console.ReadLine();
+                Console.Write(Environment.NewLine);
+                if (language != "")
+                    movie.Language = language;
+
+                Console.WriteLine("Podaj długość (" + movie.Length + "): ");
+                string length = Console.ReadLine();
+                Console.Write(Environment.NewLine);
+                if (length != "")
+                    movie.Length = Convert.ToInt32(length);
+                    
+                Console.WriteLine("Podaj datę premiery [yyyy-MM-dd]: ");
+                string releaseDate = Console.ReadLine();
+                Console.Write(Environment.NewLine);
+                if (releaseDate != "")
+                    movie.ReleaseDate = Convert.ToDateTime(releaseDate);
+
+                Console.WriteLine("Podaj tytuł: ");
+                string title = Console.ReadLine();
+                Console.Write(Environment.NewLine);
+                if (title != "")
+                    movie.Title = title;
+
+                Console.WriteLine("Podaj sugerowany wiek");
+                string viewerAge = Console.ReadLine();
+                Console.Write(Environment.NewLine);
+                if(viewerAge != "")
+                    movie.ViewerAge = Convert.ToInt32(viewerAge);
+                Console.WriteLine("Film po zmianach: ");
+                Console.WriteLine(movie);
+            }
         }
 
         private void ModifyReservation()

@@ -2,6 +2,9 @@
 
 namespace Cinema.Items
 {
+    /// <summary>
+    ///     Dane klienta.
+    /// </summary>
     public class PersonalData
     {
         #region Constructors and Destructors

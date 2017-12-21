@@ -4,6 +4,9 @@ using Cinema.Containers;
 
 namespace Cinema.Items
 {
+    /// <summary>
+    ///     Seans. Zawiera film (Movie) oraz kontener rezerwacji (Reservations).
+    /// </summary>
     public class Show : ICinemaItem
     {
         #region Constructors and Destructors

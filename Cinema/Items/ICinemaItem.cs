@@ -1,5 +1,8 @@
 ﻿namespace Cinema.Items
 {
+    /// <summary>
+    ///     Interfejs dla obiektów - pozwala na generyczny kontener.
+    /// </summary>
     public interface ICinemaItem
     {
         #region Public Properties
