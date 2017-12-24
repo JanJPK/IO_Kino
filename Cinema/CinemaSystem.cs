@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Cinema.Containers;
 using Cinema.Items;
 
@@ -95,6 +96,71 @@ namespace Cinema
 
         #region Methods
 
+        private void PopulateContainers()
+        {
+            movies.Add("Noc żywych prowadzących", Convert.ToDateTime("1996-12-12"), 125, "Roman R.", 17,
+                "Matematyczny");
+            movies.Add("Dogłębna analiza", Convert.ToDateTime("2012-11-26"), 125, "Pedro", 19, "Polski");
+
+            shows.Add(Convert.ToDateTime("2017-12-12 12:00"), 120, 15, movies.Items[1]);
+            shows.Add(Convert.ToDateTime("2017-12-12 17:00"), 120, 15, movies.Items[1]);
+            shows.Add(Convert.ToDateTime("2017-12-12 8:00"), 120, 15, movies.Items[2]);
+
+            shows.Items[1].AddReservation(new PersonalData("Bogdan", "Bobek", "123456789"),
+                new Tuple<int, int>(5, 6));
+            shows.Items[1].AddReservation(new PersonalData("Zenon", "Ziemniak", "321654987"),
+                new Tuple<int, int>(5, 7));
+            shows.Items[1].AddReservation(new PersonalData("Klaudiusz", "Kalafior", "321632387"),
+                new Tuple<int, int>(3, 4));
+            shows.Items[1].AddReservation(new PersonalData("Piotr", "Pyra", "321365987"),
+                new Tuple<int, int>(3, 5));
+            shows.Items[1].AddReservation(new PersonalData("Bartek", "Brokół", "854654987"),
+                new Tuple<int, int>(3, 6));
+            shows.Items[2].AddReservation(new PersonalData("Bogdan", "Bobek", "123456789"),
+                new Tuple<int, int>(7, 6));
+        }
+
+        #endregion
+
+        #region Ticket
+
+        private void PrintTicket(Reservation reservation)
+        {
+            Console.WriteLine("Wydrukowany bilet:");
+            Console.Write(reservation.ToString());
+        }
+
+
+        private void SellTicket()
+        {
+            Reservation reservation = null;
+            Console.WriteLine("Sprzedaż biletu. Czy klient ma już rezerwację? T/N");
+            var key = Console.ReadKey();
+            Console.WriteLine(Environment.NewLine);
+            switch (key.KeyChar)
+            {
+                case 't':
+                {
+                    Console.WriteLine("Podaj ID rezerwacji: ");
+                    var id = Convert.ToInt32(Console.ReadLine());
+                    reservation = FindReservation(id);                    
+                    break;
+                }
+                case 'n':
+                {
+                    Console.WriteLine("Tworzenie nowej rezerwacji.");
+                    reservation = AddReservation();
+                    break;
+                }
+            }
+            if(reservation != null)
+                PrintTicket(reservation);
+        }
+
+        #endregion
+
+        #region Add
+
         private void AddMovie()
         {
             Console.WriteLine(Environment.NewLine);
@@ -115,41 +181,41 @@ namespace Cinema
             Console.WriteLine(movie != null ? "Dodawanie powiodło się." : "Dodawanie nie powiodło sie.");
         }
 
-        private void AddReservation()
+        private Reservation AddReservation()
         {
             var show = FindShow();
-            if (show != null)
+            if (show == null) return null;
+
+            //(PersonalData personalData, Show show, Tuple<int, int> seat)
+            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine("Podaj dane osobowe rezerwującego: ");
+            Console.WriteLine("Imię: ");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("Nazwisko: ");
+            string secondName = Console.ReadLine();
+            Console.WriteLine("Nr telefonu: ");
+            string phone = Console.ReadLine();
+
+            int row = 0;
+            int column = 0;
+            while (true)
             {
-                //(PersonalData personalData, Show show, Tuple<int, int> seat)
-                Console.WriteLine(Environment.NewLine);
-                Console.WriteLine("Podaj dane osobowe rezerwującego: ");
-                Console.WriteLine("Imię: ");
-                string firstName = Console.ReadLine();
-                Console.WriteLine("Nazwisko: ");
-                string secondName = Console.ReadLine();
-                Console.WriteLine("Nr telefonu: ");
-                string phone = Console.ReadLine();
+                Console.WriteLine(show.ShowSeats());
+                Console.WriteLine("Wybierz rząd: ");
+                row = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Wybierz miejsce: ");
+                column = Convert.ToInt32(Console.ReadLine());
 
-                int row = 0;
-                int column = 0;
-                while (true)
-                {
-                    Console.WriteLine(show.ShowSeats());
-                    Console.WriteLine("Wybierz rząd: ");
-                    row = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Wybierz miejsce: ");
-                    column = Convert.ToInt32(Console.ReadLine());
-
-                    if (!show.Seats[row, column])
-                        break;
-                    Console.Write("Miejsce jest zajęte. Wybierz inne.");
-                }
-
-
-                var reservation = show.AddReservation(new PersonalData(firstName, secondName, phone),
-                    new Tuple<int, int>(row - 1, column - 1));
-                Console.WriteLine(reservation != null ? "Dodawanie powiodło się." : "Dodawanie nie powiodło sie.");
+                if (!show.Seats[row, column])
+                    break;
+                Console.Write("Miejsce jest zajęte. Wybierz inne.");
             }
+
+
+            var reservation = show.AddReservation(new PersonalData(firstName, secondName, phone),
+                new Tuple<int, int>(row - 1, column - 1));
+            Console.WriteLine(reservation != null ? "Dodawanie powiodło się." : "Dodawanie nie powiodło sie.");
+            return reservation;
         }
 
         private void AddShow()
@@ -169,6 +235,10 @@ namespace Cinema
                 Console.WriteLine(show != null ? "Dodawanie powiodło się." : "Dodawanie nie powiodło sie.");
             }
         }
+
+        #endregion
+
+        #region Find
 
         private Movie FindMovie()
         {
@@ -327,6 +397,10 @@ namespace Cinema
             Console.WriteLine("Baza seansów jest pusta!");
             return null;
         }
+
+        #endregion
+
+        #region Menu
 
         private void MenuMovie()
         {
@@ -536,92 +610,166 @@ namespace Cinema
             }
         }
 
+        #endregion
+
+        #region Modify
+
         private void ModifyMovie()
         {
             var movie = FindMovie();
-            if (movie != null)
-            {
-                Console.WriteLine(movie);
-                Console.WriteLine("Wprowadź nowe dane jeżeli chcesz je zmienić. Kliknij enter by pominąć." + Environment.NewLine);
+            if (movie == null) return;
 
-                Console.WriteLine("Podaj reżysera (" + movie.Director + "): ");
-                string director = Console.ReadLine();
-                Console.Write(Environment.NewLine);
-                if (director != "")
-                     movie.Director = director;
+            Console.WriteLine(movie);
+            Console.WriteLine("Wprowadź nowe dane jeżeli chcesz je zmienić. Kliknij enter by pominąć." +
+                              Environment.NewLine);
 
-                Console.WriteLine("Podaj język (" + movie.Language +"): ");
-                string language = Console.ReadLine();
-                Console.Write(Environment.NewLine);
-                if (language != "")
-                    movie.Language = language;
+            Console.WriteLine("Podaj reżysera (" + movie.Director + "): ");
+            string director = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (director != "")
+                movie.Director = director;
 
-                Console.WriteLine("Podaj długość (" + movie.Length + "): ");
-                string length = Console.ReadLine();
-                Console.Write(Environment.NewLine);
-                if (length != "")
-                    movie.Length = Convert.ToInt32(length);
-                    
-                Console.WriteLine("Podaj datę premiery [yyyy-MM-dd]: ");
-                string releaseDate = Console.ReadLine();
-                Console.Write(Environment.NewLine);
-                if (releaseDate != "")
-                    movie.ReleaseDate = Convert.ToDateTime(releaseDate);
+            Console.WriteLine("Podaj język (" + movie.Language + "): ");
+            string language = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (language != "")
+                movie.Language = language;
 
-                Console.WriteLine("Podaj tytuł: ");
-                string title = Console.ReadLine();
-                Console.Write(Environment.NewLine);
-                if (title != "")
-                    movie.Title = title;
+            Console.WriteLine("Podaj długość (" + movie.Length + "): ");
+            string length = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (length != "")
+                movie.Length = Convert.ToInt32(length);
 
-                Console.WriteLine("Podaj sugerowany wiek");
-                string viewerAge = Console.ReadLine();
-                Console.Write(Environment.NewLine);
-                if(viewerAge != "")
-                    movie.ViewerAge = Convert.ToInt32(viewerAge);
-                Console.WriteLine("Film po zmianach: ");
-                Console.WriteLine(movie);
-            }
+            Console.WriteLine("Podaj datę premiery [yyyy-MM-dd]: ");
+            string releaseDate = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (releaseDate != "")
+                movie.ReleaseDate = Convert.ToDateTime(releaseDate);
+
+            Console.WriteLine("Podaj tytuł: ");
+            string title = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (title != "")
+                movie.Title = title;
+
+            Console.WriteLine("Podaj sugerowany wiek");
+            string viewerAge = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (viewerAge != "")
+                movie.ViewerAge = Convert.ToInt32(viewerAge);
+            Console.WriteLine("Film po zmianach: ");
+            Console.WriteLine(movie);
         }
 
         private void ModifyReservation()
         {
-            throw new NotImplementedException();
+            var show = FindShow();
+            if (show == null) return;
+
+            var reservation = FindReservation(show.ID);
+            if (reservation == null) return;
+
+            Console.WriteLine(reservation);
+            Console.WriteLine("Wprowadź nowe dane jeżeli chcesz je zmienić. Kliknij enter by pominąć." +
+                              Environment.NewLine);
+
+            Console.WriteLine("Podaj dane osobowe rezerwującego: ");
+            Console.WriteLine("Imię (" + reservation.PersonalData.FirstName + "): ");
+            string firstName = Console.ReadLine();
+            Console.WriteLine(Environment.NewLine);
+            if (firstName != "")
+                reservation.PersonalData.FirstName = firstName;
+
+            Console.WriteLine("Nazwisko ("+ reservation.PersonalData.SecondName+"): ");
+            string secondName = Console.ReadLine();
+            Console.WriteLine(Environment.NewLine);
+            if (secondName != "")
+                reservation.PersonalData.SecondName = secondName;
+
+            Console.WriteLine("Nr telefonu (" + reservation.PersonalData.Phone + "): ");
+            string phone = Console.ReadLine();
+            Console.WriteLine(Environment.NewLine);
+            if (phone != "")
+                reservation.PersonalData.Phone = phone;
+
+            Console.WriteLine("Czy chcesz zmienić miejsce? T/N");
+            var key = Console.ReadKey();
+            Console.WriteLine(Environment.NewLine);
+            if (key.KeyChar == 't')
+            {
+                while (true)
+                {
+                    reservation.Show.
+                        Seats[
+                        reservation.Seat.Item1, 
+                        reservation.Seat.Item2] = false;
+                    Console.WriteLine(show.ShowSeats());
+                    Console.WriteLine("Wybierz rząd: ");
+                    var row = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("Wybierz miejsce: ");
+                    var column = Convert.ToInt32(Console.ReadLine());
+
+                    if (!show.Seats[row, column])
+                    {
+                        reservation.Seat = new Tuple<int, int>(row, column);
+                        reservation.Show.Seats[row, column] = true;
+                        break;
+                    }
+                    Console.Write("Miejsce jest zajęte. Wybierz inne.");
+                }
+            }
+            
+            Console.WriteLine("Rezerwacja po zmianach: ");
+            Console.WriteLine(reservation);
         }
 
         private void ModifyShow()
         {
+            var show = FindShow();
+            if (show == null) return;
+
+            Console.WriteLine(show);
+            Console.WriteLine("Wprowadź nowe dane jeżeli chcesz je zmienić. Kliknij enter by pominąć." +
+                              Environment.NewLine);
+
+            Console.WriteLine("Podaj datę seansu [yyyy-MM-dd HH:mm]:");
+            //DateTime date = Convert.ToDateTime(Console.ReadLine());
+            string date = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (date != "")
+                show.Date = Convert.ToDateTime(Console.ReadLine());
+
+            Console.WriteLine("Podaj długość seansu: ");
+            string length = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (length != "")
+                show.Length = Convert.ToInt32(length);
+
+            Console.WriteLine("Podaj koszt biletów: ");
+            string ticketPrice = Console.ReadLine();
+            Console.Write(Environment.NewLine);
+            if (ticketPrice != "")
+                show.TicketPrice = Convert.ToDecimal(ticketPrice);
+
+            Console.WriteLine("Czy chcesz zmienić film? T/N");
+            var key = Console.ReadKey();
+            Console.WriteLine(Environment.NewLine);
+            if (key.KeyChar == 't')
+            {
+                Console.WriteLine("Wybierz film: ");
+                Movie movie = FindMovie();
+                if (movie != null)
+                    show.Movie = movie;
+            }
+
+            Console.WriteLine("Seans po zmianach: ");
+            Console.WriteLine(show);
         }
 
-        private void PopulateContainers()
-        {
-            movies.Add("Noc żywych prowadzących", Convert.ToDateTime("1996-12-12"), 125, "Roman R.", 17,
-                "Matematyczny");
-            movies.Add("Dogłębna analiza", Convert.ToDateTime("2012-11-26"), 125, "Pedro", 19, "Polski");
+        #endregion
 
-            shows.Add(Convert.ToDateTime("2017-12-12 12:00"), 120, 15, movies.Items[1]);
-            shows.Add(Convert.ToDateTime("2017-12-12 17:00"), 120, 15, movies.Items[1]);
-            shows.Add(Convert.ToDateTime("2017-12-12 8:00"), 120, 15, movies.Items[2]);
-
-            shows.Items[1].AddReservation(new PersonalData("Bogdan", "Bobek", "123456789"),
-                new Tuple<int, int>(5, 6));
-            shows.Items[1].AddReservation(new PersonalData("Zenon", "Ziemniak", "321654987"),
-                new Tuple<int, int>(5, 7));
-            shows.Items[1].AddReservation(new PersonalData("Klaudiusz", "Kalafior", "321632387"),
-                new Tuple<int, int>(3, 4));
-            shows.Items[1].AddReservation(new PersonalData("Piotr", "Pyra", "321365987"),
-                new Tuple<int, int>(3, 5));
-            shows.Items[1].AddReservation(new PersonalData("Bartek", "Brokół", "854654987"),
-                new Tuple<int, int>(3, 6));
-            shows.Items[2].AddReservation(new PersonalData("Bogdan", "Bobek", "123456789"),
-                new Tuple<int, int>(7, 6));
-        }
-
-        private void PrintTicket(Reservations reservation)
-        {
-            Console.WriteLine("Wydrukowany bilet:");
-            Console.Write(reservation.ToString());
-        }
+        #region Remove
 
         private void RemoveMovie()
         {
@@ -729,10 +877,6 @@ namespace Cinema
                     }
                 }
             }
-        }
-
-        private void SellTicket()
-        {
         }
 
         #endregion
