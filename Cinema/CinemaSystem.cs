@@ -142,9 +142,18 @@ namespace Cinema
             {
                 case 't':
                 {
-                    Console.WriteLine("Podaj ID rezerwacji: ");
-                    var id = Convert.ToInt32(Console.ReadLine());
-                    reservation = FindReservation(id);                    
+                    try
+                    {
+                        Console.WriteLine("Podaj ID rezerwacji: ");
+                        uint id = Convert.ToUInt32(Console.ReadLine());
+                        reservation = FindReservation((int)id);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Błędne id.");
+                        return;
+                    }
+                                        
                     break;
                 }
                 case 'n':
@@ -240,31 +249,49 @@ namespace Cinema
             Console.WriteLine("Podaj dane osobowe rezerwującego: ");
             Console.WriteLine("Imię: ");
             string firstName = Console.ReadLine();
+            if (firstName.Any(Char.IsDigit) || !firstName.Any(Char.IsLetter))
+            {
+                Console.WriteLine("Imię nie może być puste oraz zawierać cyfr.");
+                return null;
+            }
+
             Console.WriteLine("Nazwisko: ");
             string secondName = Console.ReadLine();
+            if (secondName.Any(Char.IsDigit) || !secondName.Any(Char.IsLetter))
+            {
+                Console.WriteLine("Nazwisko nie może być puste oraz zawierać cyfr.");
+                return null;
+            }
+
             Console.WriteLine("Nr telefonu: ");
             string phone = Console.ReadLine();
+            if (phone.Length != 9 || !phone.All(Char.IsDigit))
+            {
+                Console.WriteLine("Numer telefonu powinien składać się z 9 cyfr");
+                return null;
+            }
 
-            int row = 0;
-            int column = 0;
-            while (true)
+            uint row = 0;
+            uint column = 0;
+
+            try
             {
                 Console.WriteLine(show.ShowSeats());
                 Console.WriteLine("Wybierz rząd: ");
-                row = Convert.ToInt32(Console.ReadLine());
+                row = Convert.ToUInt32(Console.ReadLine());
                 Console.WriteLine("Wybierz miejsce: ");
-                column = Convert.ToInt32(Console.ReadLine());
-
-                if (!show.Seats[row, column])
-                    break;
-                Console.Write("Miejsce jest zajęte. Wybierz inne.");
+                column = Convert.ToUInt32(Console.ReadLine());
+                var reservation = show.AddReservation(new PersonalData(firstName, secondName, phone),
+                                    new Tuple<int, int>((int)row - 1, (int)column - 1));
+                Console.WriteLine("Dodawanie powiodło się.");
+                return reservation;
+            }
+            catch
+            {
+                Console.WriteLine("Dodawanie nie powiodło się. Podane miejsce jest zajęte lub nie istnieje.");
+                return null;
             }
 
-
-            var reservation = show.AddReservation(new PersonalData(firstName, secondName, phone),
-                new Tuple<int, int>(row - 1, column - 1));
-            Console.WriteLine(reservation != null ? "Dodawanie powiodło się." : "Dodawanie nie powiodło sie.");
-            return reservation;
         }
 
         private void AddShow()
@@ -352,8 +379,16 @@ namespace Cinema
                     {
                         Console.WriteLine("Podaj ID: ");
                         var input = Console.ReadLine();
-                        var reservation = shows.Items[showID].Reservations.Search(Convert.ToInt32(input));
-                        if (reservation != null) return reservation;
+                        try
+                        {
+                            var reservation = shows.Items[showID].Reservations.Search(Convert.ToInt32(input));
+                            if (reservation != null) return reservation;
+                        }
+                        catch
+                        {
+                            Console.WriteLine("ID musi być liczbą całkowitą(większą od 0)");
+                            return null;
+                        }
                         break;
                     }
 
@@ -362,18 +397,29 @@ namespace Cinema
                         Console.WriteLine("Podaj nr telefonu: ");
                         var input = Console.ReadLine();
                         var foundReservations = shows.Items[showID].Reservations.Search(input);
+                        uint reservationID;
                         if (foundReservations.Count > 0)
                         {
                             for (int i = 0; i < foundReservations.Count; i++)
                             {
-                                Console.WriteLine((i + 1) + "- ID: " + foundReservations[i].ID + "; film: " +
+                                Console.WriteLine("L.p.: " + (i + 1) + "- ID: " + foundReservations[i].ID + "; film: " +
                                                   foundReservations[i].Show.Movie.Title + "; data: " +
                                                   foundReservations[i].Show.Date);
                             }
-                            Console.WriteLine("Wybierz rezerwacje: ");
-                            var reservationID = (int) char.GetNumericValue(Console.ReadKey().KeyChar);
+                            Console.WriteLine("Wybierz rezerwacje(podaj L.p.): ");
+                            try
+                            {
+                                reservationID = Convert.ToUInt32(Console.ReadLine())/*(int) char.GetNumericValue(Console.ReadKey().KeyChar)*/;
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Błędne ID.");
+                                return null;
+                            }
                             Console.WriteLine(Environment.NewLine);
-                            return foundReservations[reservationID - 1];
+                            if (reservationID <= foundReservations.Count && reservationID > 0)
+                                return foundReservations[(int)reservationID - 1];
+                            //return foundReservations[reservationID - 1];
                         }
                         break;
                     }
@@ -407,7 +453,7 @@ namespace Cinema
                     {
                         Console.WriteLine("Podaj ID: ");
                         var input = Console.ReadLine();
-                        if (input.All(char.IsDigit))
+                        if (input.All(Char.IsNumber) && input != "")
                         {
                             var show = shows.Search(Convert.ToInt32(input));
                             if (show != null) return show;
@@ -423,29 +469,40 @@ namespace Cinema
 
                     case '2':
                     {
+                        uint showID;
+
                         Console.WriteLine("Podaj tytuł filmu: ");
                         var input = Console.ReadLine();
                         var foundShows = shows.Search(input);
+
                         if (foundShows.Count > 0)
                         {
                             for (int i = 0; i < foundShows.Count; i++)
                             {
-                                Console.WriteLine(i + " - ID: " + foundShows[i].ID + "; data: " + foundShows[i].Date);
+                                Console.WriteLine("L.p.: " + (i + 1) + " - ID: " + foundShows[i].ID + "; data: " + foundShows[i].Date);
                             }
-                            Console.WriteLine("Wybierz seans: ");
-                            var showID = (int) char.GetNumericValue(Console.ReadKey().KeyChar);
+
+                            Console.WriteLine("Wybierz seans(podaj L.p.): ");
+                            try
+                            {
+                                showID = Convert.ToUInt32(Console.ReadLine())/*(int) char.GetNumericValue(Console.ReadKey().KeyChar)*/;
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Błędne ID.");
+                                return null;
+                            }
                             Console.WriteLine(Environment.NewLine);
-                            //return foundShows[showID];
                             
-                            if (showID <= foundShows.Count - 1 && showID >= 0)
-                                return foundShows[showID];
+                            if (showID <= foundShows.Count && showID > 0)
+                                return foundShows[(int)showID - 1];
                         }
                         break;
                     }
 
                     case '3':
                     {
-                        Console.WriteLine("Podaj datę: ");
+                        Console.WriteLine("Podaj datę [yyyy-MM-dd HH:mm]: ");
                         var input = Console.ReadLine();
                         try
                         {
@@ -748,19 +805,19 @@ namespace Cinema
             Console.WriteLine("Imię (" + reservation.PersonalData.FirstName + "): ");
             string firstName = Console.ReadLine();
             Console.WriteLine(Environment.NewLine);
-            if (firstName != "")
+            if (firstName != "" && !firstName.Any(Char.IsDigit))
                 reservation.PersonalData.FirstName = firstName;
 
             Console.WriteLine("Nazwisko ("+ reservation.PersonalData.SecondName+"): ");
             string secondName = Console.ReadLine();
             Console.WriteLine(Environment.NewLine);
-            if (secondName != "")
+            if (secondName != "" && !secondName.Any(Char.IsDigit))
                 reservation.PersonalData.SecondName = secondName;
 
             Console.WriteLine("Nr telefonu (" + reservation.PersonalData.Phone + "): ");
             string phone = Console.ReadLine();
             Console.WriteLine(Environment.NewLine);
-            if (phone != "")
+            if (phone != "" && phone.All(Char.IsDigit))
                 reservation.PersonalData.Phone = phone;
 
             Console.WriteLine("Czy chcesz zmienić miejsce? T/N");
@@ -768,26 +825,42 @@ namespace Cinema
             Console.WriteLine(Environment.NewLine);
             if (key.KeyChar == 't')
             {
-                while (true)
+                //while (true)
+                //{
+                reservation.Show.
+                    Seats[
+                    reservation.Seat.Item1, 
+                    reservation.Seat.Item2] = false;
+                Console.WriteLine(show.ShowSeats());
+                try
                 {
-                    reservation.Show.
-                        Seats[
-                        reservation.Seat.Item1, 
-                        reservation.Seat.Item2] = false;
-                    Console.WriteLine(show.ShowSeats());
                     Console.WriteLine("Wybierz rząd: ");
-                    var row = Convert.ToInt32(Console.ReadLine());
+                    uint row = Convert.ToUInt32(Console.ReadLine());
                     Console.WriteLine("Wybierz miejsce: ");
-                    var column = Convert.ToInt32(Console.ReadLine());
+                    uint column = Convert.ToUInt32(Console.ReadLine());
 
-                    if (!show.Seats[row, column])
+                    if (row <= reservation.Show.Seats.Length - 1 && column <= reservation.Show.Seats.Length - 1 && column > 0 && row > 0)
                     {
-                        reservation.Seat = new Tuple<int, int>(row, column);
-                        reservation.Show.Seats[row, column] = true;
-                        break;
+                        if (!show.Seats[row, column])
+                        {
+                            reservation.Seat = new Tuple<int, int>((int)row - 1, (int)column - 1);
+                            reservation.Show.Seats[row - 1, column - 1] = true;
+                            //break;
+                        }
+                        Console.Write("Miejsce jest zajęte");
                     }
-                    Console.Write("Miejsce jest zajęte. Wybierz inne.");
+                    else
+                        throw new IndexOutOfRangeException();
                 }
+                catch(Exception ex)
+                {
+                    if (ex is IndexOutOfRangeException)
+                        Console.WriteLine(Environment.NewLine + "Takie miejsce nie istnieje" + Environment.NewLine);
+                    else
+                        Console.WriteLine("Rząd i miejsce muszą być dodatnimi liczbami całkowitymi");
+                }
+                    
+                //}
             }
             
             Console.WriteLine("Rezerwacja po zmianach: ");

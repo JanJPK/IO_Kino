@@ -43,8 +43,6 @@ namespace Cinema.Containers
 
             var reservation = new Reservation(id, personalData, show, seat);
 
-            if (Items.ContainsValue(reservation)) return null;
-
             Items.Add(id, reservation);
             show.Seats[seat.Item1, seat.Item2] = true;
             return reservation;
@@ -98,7 +96,10 @@ namespace Cinema.Containers
         /// <param name="seat">Miejsce.</param>
         /// <returns>Prawda gdy miejsce jest wolne.</returns>
         private bool IsSeatAvailable(Show show, Tuple<int, int> seat)
-        {
+        {   
+
+            var isAvailable = show.Seats[seat.Item1, seat.Item2];
+
             return !show.Seats[seat.Item1, seat.Item2];
         }
 
