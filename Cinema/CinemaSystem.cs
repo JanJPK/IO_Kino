@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices.WindowsRuntime;
 using Cinema.Containers;
 using Cinema.Items;
+using System.Linq;
 
 namespace Cinema
 {
@@ -163,21 +164,69 @@ namespace Cinema
 
         private void AddMovie()
         {
+            uint length, viewerAge;
+            DateTime releaseDate;
+            string director, language;
+
             Console.WriteLine(Environment.NewLine);
             Console.WriteLine("Podaj reżysera: ");
-            string director = Console.ReadLine();
+            director = Console.ReadLine();
+            if (director.Any(Char.IsDigit))
+            {
+                Console.WriteLine("Dane reżysera nie mogą zawierać cyfr.");
+                return;
+            }
+
             Console.WriteLine("Podaj język: ");
-            string language = Console.ReadLine();
+            language = Console.ReadLine();
+            if(!language.All(Char.IsLetter))
+            {
+                Console.WriteLine("Język może zawierać jedynie litery.");
+                return;
+            }
+
             Console.WriteLine("Podaj długość:");
-            int length = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Podaj datę premiery [yyyy-MM-dd]: ");
-            DateTime releaseDate = Convert.ToDateTime(Console.ReadLine());
+            try
+            {
+                length = Convert.ToUInt32(Console.ReadLine());
+            }
+            catch
+            {
+                Console.WriteLine("Długość filmu musi być dodatnią liczbą całkowitą.");
+                return;
+            }
+                
+            Console.WriteLine("Podaj datę premiery [yyyy-MM-dd]: "); 
+            try
+            {
+                releaseDate = Convert.ToDateTime(Console.ReadLine());
+            }
+            catch
+            {
+                Console.WriteLine("Błędny format daty.");
+                return;
+            }
+
             Console.WriteLine("Podaj tytuł: ");
             string title = Console.ReadLine();
-            Console.WriteLine("Podaj sugerowany wiek");
-            int viewerAge = Convert.ToInt32(Console.ReadLine());
+            if(!title.Any(Char.IsLetterOrDigit))
+            {
+                Console.WriteLine("Błędny tytuł.");
+                return;
+            }
 
-            var movie = movies.Add(title, releaseDate, length, director, viewerAge, language);
+            Console.WriteLine("Podaj sugerowany wiek:");
+            try
+            {
+                viewerAge = Convert.ToUInt32(Console.ReadLine());
+            }
+            catch
+            {
+                Console.WriteLine("Wiek musi być dodatnią liczbą całkowitą.");
+                return;
+            }
+
+            var movie = movies.Add(title, releaseDate, (int)length, director, (int)viewerAge, language);
             Console.WriteLine(movie != null ? "Dodawanie powiodło się." : "Dodawanie nie powiodło sie.");
         }
 
@@ -358,8 +407,17 @@ namespace Cinema
                     {
                         Console.WriteLine("Podaj ID: ");
                         var input = Console.ReadLine();
-                        var show = shows.Search(Convert.ToInt32(input));
-                        if (show != null) return show;
+                        if (input.All(char.IsDigit))
+                        {
+                            var show = shows.Search(Convert.ToInt32(input));
+                            if (show != null) return show;
+                        }
+                        else
+                        {
+                            Console.WriteLine("ID musi być liczbą(większą od 0)!");
+                            return null;
+                        }
+                            
                         break;
                     }
 
@@ -377,7 +435,10 @@ namespace Cinema
                             Console.WriteLine("Wybierz seans: ");
                             var showID = (int) char.GetNumericValue(Console.ReadKey().KeyChar);
                             Console.WriteLine(Environment.NewLine);
-                            return foundShows[showID];
+                            //return foundShows[showID];
+                            
+                            if (showID <= foundShows.Count - 1 && showID >= 0)
+                                return foundShows[showID];
                         }
                         break;
                     }
@@ -386,8 +447,17 @@ namespace Cinema
                     {
                         Console.WriteLine("Podaj datę: ");
                         var input = Console.ReadLine();
-                        var show = shows.Search(Convert.ToDateTime(input));
-                        if (show != null) return show;
+                        try
+                        {
+                            var show = shows.Search(Convert.ToDateTime(input));
+                            if (show != null) return show;
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Błędny format daty");
+                            return null;
+                        }
+                        
                         break;
                     }
                 }
