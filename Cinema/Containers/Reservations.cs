@@ -30,9 +30,12 @@ namespace Cinema.Containers
         /// <returns>Utworzoną rezerwację lub null jeżeli się nie udało.</returns>
         public Reservation Add(PersonalData personalData, Show show, Tuple<int, int> seat)
         {
+            bool IsSeatAvailable() => 
+                 !show.Seats[seat.Item1, seat.Item2];
+
             // Sprawdzenie czy miejsce jest wolne.
             //if (show.Seats[seat.Item1, seat.Item2]) return null;
-            if (!IsSeatAvailable(show, seat)) return null;
+            if (!IsSeatAvailable()) return null;
 
             // ID rezerwacji = SRRR
             //      S - ID seansu
@@ -87,22 +90,5 @@ namespace Cinema.Containers
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        ///     Sprawdza czy miejsce jest dostępne.
-        /// </summary>
-        /// <param name="show">Seans.</param>
-        /// <param name="seat">Miejsce.</param>
-        /// <returns>Prawda gdy miejsce jest wolne.</returns>
-        private bool IsSeatAvailable(Show show, Tuple<int, int> seat)
-        {   
-
-            var isAvailable = show.Seats[seat.Item1, seat.Item2];
-
-            return !show.Seats[seat.Item1, seat.Item2];
-        }
-
-        #endregion
     }
 }
