@@ -34,10 +34,17 @@ namespace Cinema.Items
         public override bool Equals(object obj)
         {
             var reservation = obj as Reservation;
-            return reservation != null &&
-                   EqualityComparer<PersonalData>.Default.Equals(PersonalData, reservation.PersonalData) &&
-                   EqualityComparer<Tuple<int, int>>.Default.Equals(Seat, reservation.Seat) &&
-                   EqualityComparer<Show>.Default.Equals(Show, reservation.Show);
+            if (reservation == null)
+                return false;
+
+            if (Seat.Item1 != reservation.Seat.Item1)
+                return false;
+
+            if (Seat.Item2 != reservation.Seat.Item2)
+                return false;
+
+            return EqualityComparer<PersonalData>.Default.Equals(PersonalData, reservation.PersonalData) &&
+                   Show.ID == reservation.Show.ID;
         }
 
         public override string ToString()

@@ -40,7 +40,7 @@ namespace Cinema.Containers
             // ID rezerwacji = SRRR
             //      S - ID seansu
             //      RRR - ID rezerwacji
-            int id = Items.Count == 0 ? 1 : Items.Keys.Max();
+            int id = Items.Count == 0 ? 0 : Items.Keys.Max();
             id++;
             id += show.ID * 100;
 

@@ -72,9 +72,10 @@ namespace Cinema.Containers
         ///     Usuwa wszystkie seanse dla zadanego filmu.
         /// </summary>
         /// <param name="title">Tytuł filmu.</param>
-        public void Remove(string title)
+        public bool Remove(string title)
         {
             List<int> keysToRemove = new List<int>();
+            bool removedAny = false;
 
             foreach (var item in Items)
             {
@@ -85,8 +86,10 @@ namespace Cinema.Containers
             foreach (var key in keysToRemove)
             {
                 Items.Remove(key);
+                removedAny = true;
             }
 
+            return removedAny;
         }
 
         /// <summary>
