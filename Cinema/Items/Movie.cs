@@ -37,7 +37,7 @@ namespace Cinema.Items
         #region Public Properties
 
         public string Director { get; set; }
-        public int ID { get; set; }
+        public int ID { get; }
         public string Language { get; set; }
         public int Length { get; set; }
         public DateTime ReleaseDate { get; set; }
@@ -47,6 +47,18 @@ namespace Cinema.Items
         #endregion
 
         #region Public Methods and Operators
+
+        public override bool Equals(object obj)
+        {
+            var movie = obj as Movie;
+            return movie != null &&
+                   Director == movie.Director &&
+                   Language == movie.Language &&
+                   Length == movie.Length &&
+                   ReleaseDate == movie.ReleaseDate &&
+                   Title == movie.Title &&
+                   ViewerAge == movie.ViewerAge;
+        }
 
         public override string ToString()
         {

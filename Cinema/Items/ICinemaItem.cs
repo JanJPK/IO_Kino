@@ -7,7 +7,7 @@
     {
         #region Public Properties
 
-        int ID { get; set; }
+        int ID { get;}
 
         #endregion
 

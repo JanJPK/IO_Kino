@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Cinema.Items
 {
@@ -21,7 +22,7 @@ namespace Cinema.Items
 
         #region Public Properties
 
-        public int ID { get; set; }
+        public int ID { get; }
         public PersonalData PersonalData { get; set; }
         public Tuple<int, int> Seat { get; set; }
         public Show Show { get; set; }
@@ -29,6 +30,15 @@ namespace Cinema.Items
         #endregion
 
         #region Public Methods and Operators
+
+        public override bool Equals(object obj)
+        {
+            var reservation = obj as Reservation;
+            return reservation != null &&
+                   EqualityComparer<PersonalData>.Default.Equals(PersonalData, reservation.PersonalData) &&
+                   EqualityComparer<Tuple<int, int>>.Default.Equals(Seat, reservation.Seat) &&
+                   EqualityComparer<Show>.Default.Equals(Show, reservation.Show);
+        }
 
         public override string ToString()
         {

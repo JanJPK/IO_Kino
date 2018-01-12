@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using Cinema.Containers;
 
@@ -27,7 +29,7 @@ namespace Cinema.Items
         #region Public Properties
 
         public DateTime Date { get; set; }
-        public int ID { get; set; }
+        public int ID { get; }
         public int Length { get; set; }
         public Movie Movie { get; set; }
         public Reservations Reservations { get; set; }
@@ -41,6 +43,34 @@ namespace Cinema.Items
         public Reservation AddReservation(PersonalData personalData, Tuple<int, int> seat)
         {
             return Reservations.Add(personalData, this, seat);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var show = obj as Show;
+            if (show == null)
+                return false;
+
+            if (Seats.GetLength(0) != show.Seats.GetLength(0))
+                return false;
+            if (Seats.GetLength(1) != show.Seats.GetLength(1))
+                return false;
+
+            for (int i = 0; i < Seats.GetLength(0); i++)
+            {
+                for (int j = 0; j < Seats.GetLength(1); j++)
+                {
+                    if (Seats[i, j] != show.Seats[i, j])
+                        return false;
+                }
+            }
+
+            return Date == show.Date &&
+                   ID == show.ID &&
+                   Length == show.Length &&
+                   Movie.Equals(show.Movie) &&
+                   Reservations.Equals(show.Reservations) &&
+                   TicketPrice == show.TicketPrice;
         }
 
         public string ShowSeats()

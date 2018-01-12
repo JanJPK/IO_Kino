@@ -48,6 +48,31 @@ namespace Cinema.Containers
         }
 
         /// <summary>
+        ///     Sprawdza czy dwa kontenery są takie same - porównuje zawartość Items.
+        /// </summary>
+        /// <param name="obj">Kontener.</param>
+        /// <returns>Prawda gdy obiekty są takie same.</returns>
+        public override bool Equals(object obj)
+        {
+            var @base = obj as ContainerBase<T>;
+            if (@base == null)
+                return false;
+
+            foreach (var pair in @base.Items)
+            {
+                // Jeżeli nie ma takiego klucza => false.
+                if (!Items.ContainsKey(pair.Key))
+                    return false;
+
+                // Jeżeli wartość pod tym samym kluczem się nie zgadza => false.
+                if (!Items[pair.Key].Equals(pair.Value))
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         ///     Usuwa obiekt z Items o zadanym kluczu.
         /// </summary>
         /// <param name="id">Klucz obiektu (miejsce w Dictionary).</param>

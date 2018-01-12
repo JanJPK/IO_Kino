@@ -28,6 +28,15 @@ namespace Cinema.Items
 
         #region Public Methods and Operators
 
+        public override bool Equals(object obj)
+        {
+            var data = obj as PersonalData;
+            return data != null &&
+                   FirstName == data.FirstName &&
+                   Phone == data.Phone &&
+                   SecondName == data.SecondName;
+        }
+
         public override string ToString()
         {
             return "Imię: " + FirstName + Environment.NewLine + "Nazwisko: " + SecondName + Environment.NewLine +
