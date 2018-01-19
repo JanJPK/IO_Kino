@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Cinema.Containers;
-using Cinema.Items;
 using System.Linq;
+using Cinema.System.Containers;
+using Cinema.System.Items;
 
-namespace Cinema
+namespace Cinema.System
 {
     public class CinemaSystem
     {

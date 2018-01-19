@@ -1,0 +1,76 @@
+﻿using System;
+
+namespace Cinema.Library.Items
+{
+    /// <summary>
+    ///     Film.
+    /// </summary>
+    public class Movie : ICinemaItem
+    {
+        #region Constructors and Destructors
+
+        public Movie(int id, string title, DateTime releaseDate, int length, string director, int viewerAge,
+            string language)
+        {
+            ID = id;
+            Title = title;
+            ReleaseDate = releaseDate;
+            Length = length;
+            Director = director;
+            ViewerAge = viewerAge;
+            Language = language;
+        }
+
+        public Movie(Movie movie)
+        {
+            ID = movie.ID;
+            Title = movie.Title;
+            ReleaseDate = movie.ReleaseDate;
+            Length = movie.Length;
+            Director = movie.Director;
+            ViewerAge = movie.ViewerAge;
+            Language = movie.Language;
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        public string Director { get; set; }
+        public int ID { get; }
+        public string Language { get; set; }
+        public int Length { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public string Title { get; set; }
+        public int ViewerAge { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public override bool Equals(object obj)
+        {
+            var movie = obj as Movie;
+            return movie != null &&
+                   Director == movie.Director &&
+                   Language == movie.Language &&
+                   Length == movie.Length &&
+                   ReleaseDate == movie.ReleaseDate &&
+                   Title == movie.Title &&
+                   ViewerAge == movie.ViewerAge;
+        }
+
+        public override string ToString()
+        {
+            return "ID: " + ID + Environment.NewLine +
+                   "Tytuł: " + Title + Environment.NewLine +
+                   "Premiera: " + ReleaseDate.ToString("yyyy-MM-dd") + Environment.NewLine +
+                   "Długość: " + Length + " minut" + Environment.NewLine +
+                   "Reżyser: " + Director + Environment.NewLine +
+                   "Sugerowany wiek: " + ViewerAge + Environment.NewLine +
+                   "Język: " + Language + Environment.NewLine;
+        }
+
+        #endregion
+    }
+}

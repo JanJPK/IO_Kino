@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cinema.Items
+namespace Cinema.System.Items
 {
     /// <summary>
     ///     Film.

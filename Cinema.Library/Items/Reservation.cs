@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Cinema.Items
+namespace Cinema.Library.Items
 {
     /// <summary>
     ///     Rezerwacja; zawiera dane klienta (PersonalData).

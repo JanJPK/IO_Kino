@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Cinema.Items;
+using Cinema.Library.Items;
 
-namespace Cinema.Containers
+namespace Cinema.Library.Containers
 {
     /// <summary>
     ///     Bazowa klasa dla kontenerów.

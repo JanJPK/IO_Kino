@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9ED562EA-2BBC-46FF-A33B-69ECBB2A700B}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Cinema</RootNamespace>
-    <AssemblyName>Cinema</AssemblyName>
+    <ProjectGuid>{A1C3C61C-2831-459C-AEAB-4214F2AE388D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cinema.Library</RootNamespace>
+    <AssemblyName>Cinema.Library</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -51,18 +49,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="CinemaSystem.cs" />
+    <Compile Include="Containers\ContainerBase.cs" />
+    <Compile Include="Containers\Movies.cs" />
+    <Compile Include="Containers\Reservations.cs" />
+    <Compile Include="Containers\Shows.cs" />
+    <Compile Include="FitnesseTest.cs" />
+    <Compile Include="Items\ICinemaItem.cs" />
+    <Compile Include="Items\Movie.cs" />
+    <Compile Include="Items\PersonalData.cs" />
+    <Compile Include="Items\Reservation.cs" />
+    <Compile Include="Items\Show.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cinema.Library\Cinema.Library.csproj">
-      <Project>{a1c3c61c-2831-459c-aeab-4214f2ae388d}</Project>
-      <Name>Cinema.Library</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

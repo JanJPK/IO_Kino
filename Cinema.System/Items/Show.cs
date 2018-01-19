@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
-using Cinema.Containers;
+using Cinema.System.Containers;
 
-namespace Cinema.Items
+namespace Cinema.System.Items
 {
     /// <summary>
     ///     Seans. Zawiera film (Movie) oraz kontener rezerwacji (Reservations).

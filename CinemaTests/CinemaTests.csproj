@@ -65,6 +65,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cinema.Library\Cinema.Library.csproj">
+      <Project>{a1c3c61c-2831-459c-aeab-4214f2ae388d}</Project>
+      <Name>Cinema.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cinema\Cinema.csproj">
       <Project>{9ED562EA-2BBC-46FF-A33B-69ECBB2A700B}</Project>
       <Name>Cinema</Name>

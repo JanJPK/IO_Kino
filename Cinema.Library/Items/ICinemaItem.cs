@@ -1,4 +1,4 @@
-﻿namespace Cinema.Items
+﻿namespace Cinema.Library.Items
 {
     /// <summary>
     ///     Interfejs dla obiektów - pozwala na generyczny kontener.

@@ -1,6 +1,6 @@
 ﻿using System;
-using Cinema.Containers;
-using Cinema.Items;
+using Cinema.Library.Containers;
+using Cinema.Library.Items;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CinemaTests.Containers

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cinema.Items
+namespace Cinema.Library.Items
 {
     /// <summary>
     ///     Dane klienta.

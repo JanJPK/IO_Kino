@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cinema.Items;
+using Cinema.System.Items;
 
-namespace Cinema.Containers
+namespace Cinema.System.Containers
 {
     /// <summary>
     ///     Kontener seansów.
